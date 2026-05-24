@@ -447,34 +447,18 @@ async function loadSheet(id){
 }
 
 async function init(){
+  const loading=document.getElementById('loading');
+  const loadingSub=loading.querySelector('.loading-sub');
   try{
+    loadingSub.textContent='スプレッドシートを読み込んでいます…';
     const data=await loadSheet(SHEET_ID);
-    const real=data.filter(r=>r.name);
-    if(real.length>0){
-      allData=data;
-      populateFilters();updateStats();renderAll();
-      document.getElementById('loading').classList.add('hidden');
-    } else {
-      loadDemo();
-    }
-  } catch(e){ loadDemo(); }
-}
-
-function loadDemo(){
-  allData=[
-    {name:'オステリア バルバレスコ',address:'東京都渋谷区恵比寿1-9-7',station:'恵比寿駅',genre:'イタリアン',lat:35.6467,lng:139.7102,insta:'https://www.instagram.com/',tabelog:'https://tabelog.com/',visited:false},
-    {name:'ビストロ ル・クロ',address:'東京都港区西麻布2-25-24',station:'広尾駅',genre:'フレンチ',lat:35.6580,lng:139.7220,insta:'https://www.instagram.com/',tabelog:'https://tabelog.com/',visited:true},
-    {name:'焼鳥 鳥しき',address:'東京都品川区大崎1-1-2',station:'大崎駅',genre:'焼鳥',lat:35.6197,lng:139.7280,insta:'https://www.instagram.com/',tabelog:'https://tabelog.com/',visited:false},
-    {name:'鮨 さいとう',address:'東京都港区六本木1-4-4',station:'六本木一丁目駅',genre:'寿司',lat:35.6690,lng:139.7390,insta:'https://www.instagram.com/',tabelog:'https://tabelog.com/',visited:true},
-    {name:'らーめん 満来',address:'東京都新宿区新宿3-7-1',station:'新宿駅',genre:'ラーメン',lat:35.6896,lng:139.7006,insta:'https://www.instagram.com/',tabelog:'https://tabelog.com/',visited:false},
-    {name:'THE CAFE omotesando',address:'東京都渋谷区神宮前4-12-10',station:'表参道駅',genre:'カフェ',lat:35.6658,lng:139.7100,insta:'https://www.instagram.com/',tabelog:'https://tabelog.com/',visited:false},
-  ];
-  populateFilters();updateStats();renderAll();
-  document.getElementById('loading').classList.add('hidden');
-  const b=document.getElementById('demoBanner');
-  b.innerHTML='<strong>デモ表示中</strong>スプレッドシートにデータを入力すると自動で反映されます';
-  b.classList.add('show');
-  setTimeout(()=>b.classList.remove('show'),5000);
+    allData=data;
+    populateFilters();updateStats();renderAll();
+    loading.classList.add('hidden');
+  } catch(e){
+    loading.classList.add('hidden');
+    document.getElementById('restaurantList').innerHTML='<div class="empty-msg">スプレッドシートを読み込めませんでした。<br>下のURLを確認して「読込」を押してください。</div>';
+  }
 }
 
 // Events
